@@ -1,3 +1,4 @@
+import '@/assets/style.scss'
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router/auto'
 import routes from '~pages'
