@@ -15,4 +15,14 @@ chrome.runtime.onInstalled.addListener(async (opt) => {
 })
 
 
+chrome.runtime.onMessage.addListener(async (message/*, sender*/) => {
+    if (message.status === 'connected') {
+        const {counter} = await chrome.storage.local.get(["counter"]);
+
+        await chrome.storage.local.set({
+            counter: Number(counter || 0) + 1
+        })
+    }
+})
+
 export {}

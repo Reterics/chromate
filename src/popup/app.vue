@@ -1,11 +1,10 @@
-<script setup lang="ts"></script>
 
 <template>
   <header
       aria-label="Site Header"
       class="bg-gray-50 w-[300px]"
   >
-    Popup Header
+    Popup Header {{counter}}
   </header>
 
   <RouterView />
@@ -17,5 +16,18 @@
     Popup Footer
   </footer>
 </template>
+
+<script lang="ts">
+
+
+export default {
+  name: 'PopupApp',
+  components: {},
+  props: {
+    counter: Number
+  }
+}
+</script>
+
 
 <style scoped></style>

@@ -43,8 +43,8 @@ export default defineManifest(async (env) => ({
         },
         {
             matches: ['*://*/*'],
-            resources: ['src/content-script/iframe/index.html'],
-        },
+            resources: ['src/content-script/connector.js'],
+        }
     ],
     icons: {
         16:  'src/assets/logo_white_16.png',
