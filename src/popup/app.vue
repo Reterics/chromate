@@ -1,10 +1,12 @@
 
 <template>
+  <PopupMenu />
+
   <header
       aria-label="Site Header"
       class="bg-gray-50 w-[300px]"
   >
-    Popup Header {{counter}}
+    Popup Couner {{counter}}
   </header>
 
   <RouterView />
@@ -20,9 +22,11 @@
 <script lang="ts">
 
 
+import PopupMenu from "../components/PopupMenu.vue";
+
 export default {
   name: 'PopupApp',
-  components: {},
+  components: {PopupMenu},
   props: {
     counter: Number
   }

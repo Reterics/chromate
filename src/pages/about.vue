@@ -8,7 +8,6 @@
       Go Back
     </button>
 
-    <Changelog />
   </div>
 </template>
 
