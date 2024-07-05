@@ -1,7 +1,7 @@
 
 <template>
   <PopupMenu />
-  <RouterView />
+  <RouterView :scriptEntries="entries" />
 
   <footer
       aria-label="Site Footer"
@@ -20,7 +20,8 @@ export default {
   name: 'PopupApp',
   components: {PopupMenu},
   props: {
-    counter: Number
+    counter: Number,
+    entries: Array
   }
 }
 </script>

@@ -15,8 +15,9 @@ const router = createRouter({
     routes,
 })
 
-chrome.storage.local.get(["counter"]).then((value) => {
+chrome.storage.local.get(["counter", "entries"]).then((value) => {
     createApp(App, {
-        counter: value.counter || 0
+        counter: value.counter || 0,
+        entries: value.entries ? value.entries : []
     }).use(router).mount('#app')
 })
