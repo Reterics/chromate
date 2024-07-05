@@ -1,5 +1,25 @@
-# Vue 3 + TypeScript + Vite
+# Chromate
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Chrome Extension to assist for development and day to day tasks. It is based on Vue 3, TailwindCSS, TypeScript and Vite.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+![Scripts](./docs/scripts.png)
+
+## Getting started
+
+```bash
+npm install
+npm run build
+```
+
+Import **dist/chrome** folder in your chrome and it is ready to use.
+
+![Rest API](./docs/rest_api.png)
+
+
+## Contribute
+
+There are many ways to [contribute](./CONTRIBUTING.md) to Quick Chat API Client.
+* [Submit bugs](https://github.com/entroped/quick-chat-api-client/issues) and help us verify fixes as they are checked in.
+* Review the [source code changes](https://github.com/entroped/quick-chat-api-client/pulls).
+* [Contribute bug fixes](https://github.com/entroped/quick-chat-api-client/blob/main/CONTRIBUTING.md).
+
