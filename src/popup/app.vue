@@ -1,14 +1,9 @@
 
 <template>
-  <PopupMenu />
-  <RouterView :scriptEntries="entries" />
-
-  <footer
-      aria-label="Site Footer"
-      class="bg-gray-50"
-  >
-    Popup Footer
-  </footer>
+  <div class="text-slate-500 dark:text-slate-800 bg-white dark:bg-slate-200 h-full">
+    <PopupMenu />
+    <RouterView :scriptEntries="entries" />
+  </div>
 </template>
 
 <script lang="ts">
