@@ -17,6 +17,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '~': fileURLToPath(new URL('./src', import.meta.url)),
       src: fileURLToPath(new URL('./src', import.meta.url)),
+      stream: "stream-browserify",
+      'safe-buffer': "buffer",
     },
   },
   plugins: [
@@ -73,7 +75,7 @@ export default defineConfig({
         setup: 'src/setup/index.html'
       },
     },
-    minify: 'terser',
+    // minify: 'terser',
     terserOptions: {},
     outDir: 'dist/chrome',
   },

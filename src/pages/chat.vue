@@ -14,9 +14,15 @@
 </template>
 
 <script lang="ts">
+
+
+import {CryptoModule} from "../utils/crypto.ts";
+
+
 export default {
   data() {
     return {
+      cryptoModule: new CryptoModule('testPassword'),
       sending: false,
       body: '',
       responses: []
@@ -24,6 +30,12 @@ export default {
   },
   methods: {
     async sendMessage() {
+      console.log('Encrypt message: ', this.body);
+      const encrypted = this.cryptoModule.encrypt(this.body);
+      console.log(encrypted);
+
+      console.log('Decrypt message: ', this.cryptoModule.decrypt(encrypted));
+
       alert('Not implemented')
     }
   }

@@ -1,3 +1,7 @@
+import {applyBrowserUtils} from "../utils/browserify.ts";
+
+applyBrowserUtils();
+
 import '@/assets/style.scss'
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router/auto'
