@@ -2,7 +2,7 @@
 
 Chrome Extension to assist for development and day to day tasks. It is based on Vue 3, TailwindCSS, TypeScript and Vite.
 
-![Scripts](./docs/scripts.png)
+![HomePage](./docs/home.png)
 
 ## Getting started
 
@@ -12,6 +12,8 @@ npm run build
 ```
 
 Import **dist/chrome** folder in your chrome and it is ready to use.
+
+![Scripts](./docs/scripts.png)
 
 ![Rest API](./docs/rest_api.png)
 
