@@ -42,6 +42,7 @@
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
+  name: 'RestAPIPage',
   setup() {
     const url = ref('');
     const method = ref('GET');
