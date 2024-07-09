@@ -23,6 +23,10 @@ export class CryptoModule {
         this._digest = 'sha256';  // Default is SHA256, No reason to upgrade to 512, because of compatibility and no security advantage
     }
 
+    setPassword(password: string) {
+        this._password = password;
+    }
+
     _deriveKey(salt: Buffer): Buffer {
         return crypto.pbkdf2Sync(this._password, salt, this._iterations, 32, this._digest);
     }

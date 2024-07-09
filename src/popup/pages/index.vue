@@ -16,9 +16,6 @@
       >
         Let's talk
       </RouterLink>
-
-
-
   </div>
 </template>
 
