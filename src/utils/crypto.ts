@@ -23,6 +23,14 @@ export class CryptoModule {
         this._digest = 'sha256';  // Default is SHA256, No reason to upgrade to 512, because of compatibility and no security advantage
     }
 
+    isEncrypted(body: EncryptedMessage): boolean {
+        return !!(body && typeof body === 'object' &&
+            typeof body.encryptedData === 'string' &&
+            typeof body.iv === 'string' &&
+            typeof body.salt === 'string');
+
+    }
+
     setPassword(password: string) {
         this._password = password;
     }

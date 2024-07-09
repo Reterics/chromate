@@ -50,6 +50,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { CryptoModule } from "../utils/crypto.ts";
+import { getAllValuesByPath } from "../utils/chatUtils.ts";
 
 
 export default defineComponent({
@@ -58,22 +59,77 @@ export default defineComponent({
     const cryptoModule = new CryptoModule(''); // Initialize with an empty string
     const sending = ref(false);
     const body = ref('');
-    const responses = ref([]);
+    const responses = ref<ChatMessage[]>([]);
     const settings = ref(false);
     const key = ref('');
     const server = ref('');
     const api = ref('');
+    const threadId = ref('');
 
     const sendMessage = async () => {
       cryptoModule.setPassword(key.value); // Update the key in CryptoModule
 
-      console.log('Encrypt message: ', body.value, ' with ', key.value);
       const encrypted = cryptoModule.encrypt(body.value);
-      console.log(encrypted);
 
-      console.log('Decrypt message: ', cryptoModule.decrypt(encrypted));
+      if (!server.value) {
+        alert('No server name is defined');
+      }
+      const requestBody = {
+        content: encrypted,
+        threadId: threadId.value ? threadId.value : undefined
+      };
 
-      alert('Not implemented');
+      let uri = '/chat';
+      if (api.value) {
+        uri += '?key=' + api.value;
+      }
+      const request = await fetch(server.value + uri, {
+        mode: 'cors',
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!request.ok) {
+        return alert('Failed to receive server data');
+      }
+      let response = await request.json();
+
+      if (!response) {
+        return alert('Server data is empty or invalid');
+      }
+
+      if (cryptoModule.isEncrypted(response)) {
+        try {
+          response = JSON.parse(cryptoModule.decrypt(response));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (!response) {
+        return alert('Server data is invalid');
+      }
+
+      const messages = getAllValuesByPath(response, 'result.content.text.value') as string[];
+      console.log('Received messages: ', messages);
+      if (messages && Array.isArray(messages)) {
+        let type = 'You';
+
+        responses.value = messages.map(message => {
+          const chatMessage:ChatMessage = {
+            message: message,
+            user: type
+          };
+          type = type === 'assistant' ? 'You' : 'assistant';
+          return chatMessage;
+        });
+      }
+      if (response.threadId) {
+        threadId.value = response.threadId;
+      }
     };
 
     return {

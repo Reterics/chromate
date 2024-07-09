@@ -30,3 +30,18 @@ type DigestType = 'RSA-MD5'|'RSA-RIPEMD160'|'RSA-SHA1'|'RSA-SHA1-2'|'RSA-SHA224'
     'sha256'|'sha256WithRSAEncryption'|'sha3-224'|'sha3-256'|'sha3-384'|'sha3-512'|'sha384'|'sha384WithRSAEncryption'|
     'sha512'|'sha512-224'|'sha512-224WithRSAEncryption'|'sha512-256'|'sha512-256WithRSAEncryption'|
     'sha512WithRSAEncryption'|'shake128'|'shake256'|'sm3'|'sm3WithRSAEncryption'|'ssl3-md5'|'ssl3-sha1';
+
+interface ChatMessage {
+    user: string,
+    message: string,
+    timestamp?: number
+}
+
+interface NestedObject {
+    [key: string|number]: string|number|undefined|null|NestedObject|NestedObject[]
+}
+
+interface SearchStack {
+    obj: any,
+    index: number
+}
