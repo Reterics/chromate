@@ -13,8 +13,19 @@ npm run build
 
 Import **dist/chrome** folder in your chrome and it is ready to use.
 
+### GPT Assistant
+If you open the Chat Tab and provide your API key, GPT Chat Server and Personal Private key, you can communicate with
+your own OpenAI GPT assistant in a secure channel _(AES-256-cbc encryption)_.
+
+![Scripts](./docs/chat.png)
+
+### Script Injector
+If you want to execute your own scripts in order to help testing your application you can create events for them.
 ![Scripts](./docs/scripts.png)
 
+### Rest API
+For testing simple Rest API endpoint without any need for further customizations, we can use the Rest API page to
+quickly execute our requests.
 ![Rest API](./docs/rest_api.png)
 
 

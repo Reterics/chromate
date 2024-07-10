@@ -1,9 +1,8 @@
 <template>
   <div class="justify-items-center m-auto mt-1 p-1">
-    <div v-if="responses && !responses.length">
+    <div v-if="responses && responses.length" class="overflow-x-hidden overflow-y-scroll mb-1 max-h-[345px]">
       <div v-for="(response, index) in responses" :key="index" class="flex items-start gap-2.5" :style="response.user === 'You' ? 'flex-direction: row-reverse;' : '' ">
-        <img class="w-8 h-8 rounded-full" src="" :alt="response.user">
-        <div class="flex flex-col gap-1 w-full max-w-[320px]">
+        <div class="flex flex-col gap-1 w-full max-w-[320px] mb-1">
           <div class="flex items-center space-x-2 rtl:space-x-reverse">
             <span class="text-sm font-semibold text-gray-900">{{ response.user }}</span>
             <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ response.timestamp }}</span>
@@ -81,7 +80,8 @@ export default defineComponent({
     const cryptoModule = new CryptoModule(''); // Initialize with an empty string
     const sending = ref(false);
     const body = ref('');
-    const responses = ref<ChatMessage[]>([]);
+    const responses = ref<ChatMessage[]>(props.config.responses ?
+        Object.values(props.config.responses) : []);
     const settings = ref(false);
     const key = ref('');
     const server = ref(props.config.server || '');
@@ -89,15 +89,14 @@ export default defineComponent({
     const threadId = ref(props.config.threadId || '');
 
     const saveSettings = () => {
-      if (!settings.value) {
         emit("update", {
           chat: {
             server: server.value,
             api: api.value,
-            threadId: threadId.value
+            threadId: threadId.value,
+            responses: responses.value
           }
         });
-      }
     }
 
 
@@ -118,6 +117,10 @@ export default defineComponent({
       if (api.value) {
         uri += '?key=' + api.value;
       }
+      responses.value.push({
+        message: body.value,
+        user: 'You'
+      });
       const request = await fetch(server.value + uri, {
         mode: 'cors',
         method: 'POST',
@@ -158,25 +161,26 @@ export default defineComponent({
             message: message,
             user: type
           };
-          type = type === 'assistant' ? 'You' : 'assistant';
+          type = type === 'Assistant' ? 'You' : 'Assistant';
           return chatMessage;
         });
       }
       if (response.threadId) {
         threadId.value = response.threadId;
+        saveSettings();
       }
     };
 
     return {
       sending,
       body,
-      responses,
+      responses: responses,
       settings,
       key,
       server,
       api,
       sendMessage,
-      saveSettings
+      saveSettings: () => !settings.value && saveSettings()
     };
   }
 });
