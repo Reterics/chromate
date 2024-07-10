@@ -1,5 +1,19 @@
 <template>
   <div class="justify-items-center m-auto mt-1 p-1">
+    <div v-if="responses && !responses.length">
+      <div v-for="(response, index) in responses" :key="index" class="flex items-start gap-2.5" :style="response.user === 'You' ? 'flex-direction: row-reverse;' : '' ">
+        <img class="w-8 h-8 rounded-full" src="" :alt="response.user">
+        <div class="flex flex-col gap-1 w-full max-w-[320px]">
+          <div class="flex items-center space-x-2 rtl:space-x-reverse">
+            <span class="text-sm font-semibold text-gray-900">{{ response.user }}</span>
+            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ response.timestamp }}</span>
+          </div>
+          <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
+            <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{{ response.message}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <form @submit.prevent="sendMessage">
       <div class="w-full border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
         <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
@@ -21,7 +35,7 @@
 
             <button type="button" class="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
               <label class="inline-flex items-center cursor-pointer">
-                <input v-model="settings" type="checkbox" class="sr-only peer">
+                <input v-model="settings" type="checkbox" class="sr-only peer" @click="saveSettings">
                 <div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                 <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Settings</span>
               </label>
@@ -44,6 +58,7 @@
         </div>
       </div>
     </form>
+
   </div>
 </template>
 
@@ -55,16 +70,36 @@ import { getAllValuesByPath } from "../utils/chatUtils.ts";
 
 export default defineComponent({
   name: 'ChatAssistantPage',
-  setup() {
+  props: {
+    config: {
+      type: Object,
+      required: true
+    }
+  },
+  emits: ['update'],
+  setup(props, { emit }) {
     const cryptoModule = new CryptoModule(''); // Initialize with an empty string
     const sending = ref(false);
     const body = ref('');
     const responses = ref<ChatMessage[]>([]);
     const settings = ref(false);
     const key = ref('');
-    const server = ref('');
-    const api = ref('');
-    const threadId = ref('');
+    const server = ref(props.config.server || '');
+    const api = ref(props.config.api || '');
+    const threadId = ref(props.config.threadId || '');
+
+    const saveSettings = () => {
+      if (!settings.value) {
+        emit("update", {
+          chat: {
+            server: server.value,
+            api: api.value,
+            threadId: threadId.value
+          }
+        });
+      }
+    }
+
 
     const sendMessage = async () => {
       cryptoModule.setPassword(key.value); // Update the key in CryptoModule
@@ -140,7 +175,8 @@ export default defineComponent({
       key,
       server,
       api,
-      sendMessage
+      sendMessage,
+      saveSettings
     };
   }
 });

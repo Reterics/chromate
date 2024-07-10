@@ -2,7 +2,7 @@
 <template>
   <div class="text-slate-500 dark:text-slate-800 bg-white dark:bg-slate-200 h-full">
     <PopupMenu />
-    <RouterView :scriptEntries="scriptEntries" />
+    <RouterView :script-entries="scriptEntries" :config="config" @update="update"/>
   </div>
 </template>
 
@@ -21,12 +21,24 @@ export default defineComponent({
     entries: {
       type: Array,
       required: true
+    },
+    chat: {
+      type: Object,
+      required: true
+    },
+    set: {
+      type: Function,
+      required: true
     }
   },
   setup(props) {
-    const { entries } = toRefs(props);
+    const { entries, chat } = toRefs(props);
     return {
-      scriptEntries: entries
+      scriptEntries: entries,
+      config: chat,
+      update: (config: object) => {
+        props.set(config);
+      }
     };
   }
 });

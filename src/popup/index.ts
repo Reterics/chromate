@@ -17,11 +17,15 @@ routes.push({
 const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
     routes,
-})
+});
 
-chrome.storage.local.get(["counter", "entries"]).then((value) => {
+chrome.storage.local.get(["counter", "entries", "chat"]).then((value) => {
     createApp(App, {
         counter: value.counter || 0,
-        entries: value.entries ? value.entries : []
+        entries: value.entries ? value.entries : [],
+        chat: value.chat || {},
+        set: async (object: object) => {
+            return await chrome.storage.local.set(object);
+        }
     }).use(router).mount('#app')
 })

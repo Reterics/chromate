@@ -60,6 +60,7 @@ export default defineComponent({
       required: true
     }
   },
+  emits: ['update'],
   setup(props, { emit }) {
     const { scriptEntries } = toRefs(props);
     const entries = ref(Object.values(scriptEntries.value));
@@ -81,11 +82,9 @@ export default defineComponent({
     };
 
     const updateChromeStorage = () => {
-      // eslint-disable-next-line no-undef
-      chrome.storage.local.set({ entries: entries.value }, () => {
-        console.log('Entries updated in Chrome storage');
+      emit('update', {
+        entries: entries.value
       });
-      emit('update:entries', entries.value);
     };
 
     watch(scriptEntries, (newVal) => {
