@@ -19,13 +19,22 @@ const router = createRouter({
     routes,
 });
 
+
 chrome.storage.local.get(["counter", "entries", "chat"]).then((value) => {
     createApp(App, {
         counter: value.counter || 0,
         entries: value.entries ? value.entries : [],
         chat: value.chat || {},
-        set: async (object: object) => {
-            return await chrome.storage.local.set(object);
+        set: async (object: ChromeStoredData) => {
+            await chrome.storage.local.set(object);
+            if (object && object.entries) {
+                chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                    // Send a message to the content script in the active tab
+                    if (tabs && tabs.length > 0) {
+                        chrome.tabs.sendMessage(tabs[0].id as number, { message: "scriptUpdate" });
+                    }
+                });
+            }
         }
     }).use(router).mount('#app')
 })

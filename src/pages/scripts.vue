@@ -30,7 +30,7 @@
           </textarea>
         </td>
         <td class="p-1">
-          <input id="first_name" v-model="entry.keybind" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Keybind" required @input="updateEntry(index, 'keybind', entry.keybind)" />
+          <input id="first_name" v-model="entry.keyBind" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Keybind" required @input="updateEntry(index, 'keyBind', entry.keyBind)" />
         </td>
         <td class="p-1 justify-center justify-items-center text-center">
           <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" @click="deleteEntry(index)">Delete</a>
@@ -66,7 +66,7 @@ export default defineComponent({
     const entries = ref(Object.values(scriptEntries.value));
 
     const addEntry = () => {
-      const newEntry = { id: Date.now(), name: '', content: '', keybind: '' };
+      const newEntry = { id: Date.now(), name: '', content: '', keyBind: '' };
       entries.value.push(newEntry);
       updateChromeStorage();
     };

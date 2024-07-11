@@ -45,3 +45,25 @@ interface SearchStack {
     obj: any,
     index: number
 }
+
+interface InjectedScripts {
+    [key: string]: InjectedScript[]
+}
+interface InjectedScript {
+    name: string,
+    keyBind: string,
+    content: string
+}
+
+interface ChatData {
+    server: string,
+    api: string,
+    threadId?: string,
+    responses?: ChatMessage[]
+
+}
+interface ChromeStoredData {
+    entries?: object,
+    counter?: number,
+    chat?: ChatData
+}

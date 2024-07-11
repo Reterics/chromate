@@ -35,7 +35,7 @@ export default defineManifest(async (env) => ({
     ],
     offline_enabled: false,
     host_permissions: [],
-    permissions: ['storage', 'tabs', 'background'],
+    permissions: ['storage', 'tabs', 'background', "scripting", "activeTab"],
     web_accessible_resources: [
         {
             matches: ['*://*/*'],

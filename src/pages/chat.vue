@@ -96,7 +96,7 @@ export default defineComponent({
             threadId: threadId.value,
             responses: responses.value
           }
-        });
+        } as ChromeStoredData);
     }
 
 
