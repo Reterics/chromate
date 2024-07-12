@@ -1,14 +1,26 @@
+import {ScriptInterpreter} from "./ScriptInterpreter.ts";
 
 export class ScriptHandler {
-    private _loaded: InjectedScripts;
+    private readonly _loaded: InjectedScripts;
+    private _interpreter: ScriptInterpreter;
     constructor() {
         this._loaded = {};
+        this._interpreter = new ScriptInterpreter();
 
-        document.addEventListener('keyup', (evt) => {
+        document.addEventListener('keyup', (evt: KeyboardEvent) => {
             const scripts = this._loaded[evt.key] || [];
 
             if (scripts.length > 0) {
                 console.log('Execute: ', scripts);
+                const results:string[] = [];
+                scripts.reduce( async (promise: Promise<string[]>, script) => {
+                    const result: string[] = await promise;
+                    results.push(result.join("\n"));
+                    return this._interpreter.execute(script.content);
+                }, Promise.resolve([]))
+                    .then(() => {
+                        console.log('Scripts are executed ', results);
+                    })
             }
         })
     }
