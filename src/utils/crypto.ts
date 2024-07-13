@@ -1,5 +1,5 @@
-import crypto from "crypto-browserify"
 import {Buffer} from "buffer"
+import crypto from "crypto-browserify"
 
 export class CryptoModule {
     private _password: string;
@@ -24,14 +24,14 @@ export class CryptoModule {
     }
 
     isEncrypted(body: EncryptedMessage): boolean {
-        return !!(body && typeof body === 'object' &&
-            typeof body.encryptedData === 'string' &&
-            typeof body.iv === 'string' &&
-            typeof body.salt === 'string');
+        return (body && typeof body === 'object' &&
+          typeof body.encryptedData === 'string' &&
+          typeof body.iv === 'string' &&
+          typeof body.salt === 'string');
 
     }
 
-    setPassword(password: string) {
+    setPassword(password: string): void {
         this._password = password;
     }
 
@@ -39,7 +39,7 @@ export class CryptoModule {
         return crypto.pbkdf2Sync(this._password, salt, this._iterations, 32, this._digest);
     }
 
-    decrypt(encryptedMessage: EncryptedMessage) {
+    decrypt(encryptedMessage: EncryptedMessage): string {
         const key = this._deriveKey(Buffer.from(encryptedMessage.salt, 'hex'));
         const iv = Buffer.from(encryptedMessage.iv, 'hex'),
             encryptedText = Buffer.from(encryptedMessage.encryptedData, 'hex'),
@@ -50,7 +50,7 @@ export class CryptoModule {
         return decrypted.toString();
     }
 
-    encrypt(text: string) {
+    encrypt(text: string): EncryptedMessage {
         const key = this._deriveKey(this._salt),
             iv = crypto.randomBytes(16),  // Initialization vector must be 16 bytes
             cipher = crypto.createCipheriv(this._algo, key, iv);

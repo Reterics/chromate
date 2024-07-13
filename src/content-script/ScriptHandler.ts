@@ -25,12 +25,12 @@ export class ScriptHandler {
         })
     }
 
-    loadScript({name, keyBind, content}: InjectedScript) {
+    loadScript({name, keyBind, content}: InjectedScript): void {
         if (Object
             .values(this._loaded)
             .filter(entry => entry.find(l => l.name === name))
             .length) {
-            console.warn('[ScriptHandler] ' + name + ' already loaded.');
+            console.warn(`[ScriptHandler] ${name} already loaded.`);
             return;
         }
 

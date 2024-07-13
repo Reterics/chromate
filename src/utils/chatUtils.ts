@@ -1,5 +1,5 @@
 
-export const getAllValuesByPath = (obj: NestedObject, path: string) => {
+export const getAllValuesByPath = (obj: NestedObject, path: string): any => {
     const keys = path.split('.');
     const results = [];
     const stack: SearchStack[] = [{ obj, index: 0 }];

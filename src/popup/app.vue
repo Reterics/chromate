@@ -1,13 +1,7 @@
-
-<template>
-  <div class="text-slate-500 dark:text-slate-800 bg-white dark:bg-slate-200 h-full">
-    <PopupMenu />
-    <RouterView :script-entries="scriptEntries" :config="config" @update="update"/>
-  </div>
-</template>
-
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import type { PropType } from 'vue'
+
 import PopupMenu from "../components/PopupMenu.vue";
 
 export default defineComponent({
@@ -18,14 +12,8 @@ export default defineComponent({
       type: Number,
       required: true
     },
-    entries: {
-      type: Array,
-      required: true
-    },
-    chat: {
-      type: Object,
-      required: true
-    },
+    entries: Array as PropType<InjectedScript[]>,
+    chat: Object as PropType<ChatData>,
     set: {
       type: Function,
       required: true
@@ -36,12 +24,19 @@ export default defineComponent({
     return {
       scriptEntries: entries,
       config: chat,
-      update: (config: object) => {
+      update: (config: object): void => {
         props.set(config);
       }
     };
   }
 });
 </script>
+
+<template>
+  <div class="text-slate-500 dark:text-slate-800 bg-white dark:bg-slate-200 h-full">
+    <PopupMenu />
+    <RouterView :script-entries="scriptEntries" :config="config" @update="update" />
+  </div>
+</template>
 
 <style scoped></style>

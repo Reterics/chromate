@@ -1,7 +1,7 @@
 import {Buffer} from "buffer"
 
 
-export function applyBrowserUtils() {
+export function applyBrowserUtils(): void {
     // Define global process object if it doesn't exist
     if (typeof process === 'undefined') {
         window.process = {

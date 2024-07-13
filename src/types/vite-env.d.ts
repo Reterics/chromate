@@ -49,7 +49,9 @@ interface SearchStack {
 interface InjectedScripts {
     [key: string]: InjectedScript[]
 }
+
 interface InjectedScript {
+    id?: number,
     name: string,
     keyBind: string,
     content: string
@@ -63,7 +65,7 @@ interface ChatData {
 
 }
 interface ChromeStoredData {
-    entries?: object,
+    entries?: InjectedScript[],
     counter?: number,
     chat?: ChatData
 }

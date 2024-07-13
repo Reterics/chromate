@@ -28,7 +28,7 @@ chrome.storage.local.get(["counter", "entries", "chat"]).then((value) => {
         set: async (object: ChromeStoredData) => {
             await chrome.storage.local.set(object);
             if (object && object.entries) {
-                chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                     // Send a message to the content script in the active tab
                     if (tabs && tabs.length > 0) {
                         chrome.tabs.sendMessage(tabs[0].id as number, { message: "scriptUpdate" });

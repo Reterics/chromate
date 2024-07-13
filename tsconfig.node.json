@@ -26,6 +26,7 @@
     "vite.config.ts",
     "vite.firefox.config.ts",
     "manifest.config.ts",
-    "manifest.firefox.config.ts"
+    "manifest.firefox.config.ts",
+    "define.config.ts"
   ]
 }

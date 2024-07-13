@@ -1,13 +1,13 @@
+import { URL, fileURLToPath } from 'node:url'
+import { dirname, relative } from 'node:path'
 import { crx } from '@crxjs/vite-plugin'
 
 import { defineConfig } from 'vite'
-import { URL, fileURLToPath } from 'node:url'
-import { dirname, relative } from 'node:path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Pages from 'vite-plugin-pages'
+import vue from '@vitejs/plugin-vue'
 import { defineViteConfig as define } from './define.config'
 
-import vue from '@vitejs/plugin-vue'
 import manifest from './manifest.config'
 
 // https://vitejs.dev/config/
@@ -60,7 +60,7 @@ export default defineConfig({
       name: 'assets-rewrite',
       enforce: 'post',
       apply: 'build',
-      transformIndexHtml(html, { path }) {
+      transformIndexHtml(html, { path }): string {
         return html.replace(
             /"\/assets\//g,
             `"${relative(dirname(path), '/assets')}/`
@@ -72,7 +72,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         popup: 'src/popup/index.html',
-        setup: 'src/setup/index.html'
+        setup: 'src/setup/index.html',
       },
     },
     // minify: 'terser',

@@ -18,7 +18,6 @@ export class ScriptInterpreter {
             }
             if (part.endsWith(')')) {
                 // Function detected, Parameters are not supported in the moment
-                // eslint-disable-next-line prefer-const
                 let [method, parameters] = part.split('(');
                 parameters = parameters.substring(0, parameters.length - 1);
 
@@ -29,7 +28,7 @@ export class ScriptInterpreter {
                         .split(',')
                         .map(p => p.startsWith('\'') || p.startsWith('"') ? p.substring(1, p.length - 1) : p));
                 } else {
-                    console.warn(method + ' is not a function.');
+                    console.warn(`${method} is not a function.`);
                 }
             } else if (part.endsWith(']')) {
                 // Arrays are not supported
@@ -69,7 +68,7 @@ export class ScriptInterpreter {
                     });
                     break;
                 default:
-                    console.warn(sourceCommand + ' is not supported command');
+                    console.warn(`${sourceCommand} is not supported command`);
             }
             results.push(result as string);
         }
