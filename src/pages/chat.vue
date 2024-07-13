@@ -1,127 +1,113 @@
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 import { CryptoModule } from "../utils/crypto.ts";
 import { getAllValuesByPath } from "../utils/chatUtils.ts";
-import { b } from 'unplugin-vue-router/options-EuMjkncO'
 
-
-export default defineComponent({
-  name: 'ChatAssistantPage',
-  props: {
-    config: {
-      type: Object,
-      required: true
-    }
-  },
-  emits: ['update'],
-  setup(props, { emit }) {
-    const cryptoModule = new CryptoModule(''); // Initialize with an empty string
-    const sending = ref(false);
-    const body = ref('');
-    const responses = ref<ChatMessage[]>(props.config.responses ?
-        Object.values(props.config.responses) : []);
-    const settings = ref(false);
-    const key = ref('');
-    const server = ref(props.config.server || '');
-    const api = ref(props.config.api || '');
-    const threadId = ref(props.config.threadId || '');
-
-    const saveSettings = (): void => {
-        emit("update", {
-          chat: {
-            server: server.value,
-            api: api.value,
-            threadId: threadId.value,
-            responses: responses.value
-          }
-        } as ChromeStoredData);
-    }
-
-
-    const sendMessage = async (): Promise<void> => {
-      cryptoModule.setPassword(key.value); // Update the key in CryptoModule
-
-      const encrypted = cryptoModule.encrypt(body.value);
-
-      if (!server.value) {
-        alert('No server name is defined');
-      }
-      const requestBody = {
-        content: encrypted,
-        threadId: threadId.value ? threadId.value : undefined
-      };
-
-      let uri = '/chat';
-      if (api.value) {
-        uri += `?key=${  api.value}`;
-      }
-      responses.value.push({
-        message: body.value,
-        user: 'You'
-      });
-      const request = await fetch(server.value + uri, {
-        mode: 'cors',
-        method: 'POST',
-        body: JSON.stringify(requestBody),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      });
-      if (!request.ok) {
-        return alert('Failed to receive server data');
-      }
-      let response = await request.json();
-
-      if (!response) {
-        return alert('Server data is empty or invalid');
-      }
-
-      if (cryptoModule.isEncrypted(response)) {
-        try {
-          response = JSON.parse(cryptoModule.decrypt(response));
-        } catch (e) {
-          console.error(e);
-        }
-      }
-
-      if (!response) {
-        return alert('Server data is invalid');
-      }
-
-      const messages = getAllValuesByPath(response, 'result.content.text.value') as string[];
-      console.log('Received messages: ', messages);
-      if (messages && Array.isArray(messages)) {
-        let type = 'You';
-
-        responses.value = messages.map(message => {
-          const chatMessage:ChatMessage = {
-            message,
-            user: type
-          };
-          type = type === 'Assistant' ? 'You' : 'Assistant';
-          return chatMessage;
-        });
-      }
-      if (response.threadId) {
-        threadId.value = response.threadId;
-        saveSettings();
-      }
-    };
-
-    return {
-      sending,
-      body,
-      responses,
-      settings,
-      key,
-      server,
-      api,
-      sendMessage,
-      saveSettings: (): false | void => !settings.value && saveSettings()
-    };
+const props = defineProps({
+  config: {
+    type: Object,
+    required: true
   }
-});
+})
+
+const emit = defineEmits(['update'])
+
+
+const cryptoModule = new CryptoModule(''); // Initialize with an empty string
+const sending = ref(false);
+const body = ref('');
+const responses = ref<ChatMessage[]>(props.config.responses ?
+    Object.values(props.config.responses) : []);
+const settings = ref(false);
+const key = ref('');
+const server = ref(props.config.server || '');
+const api = ref(props.config.api || '');
+const threadId = ref(props.config.threadId || '');
+
+const saveSettings = (): void => {
+    emit("update", {
+      chat: {
+        server: server.value,
+        api: api.value,
+        threadId: threadId.value,
+        responses: responses.value
+      }
+    } as ChromeStoredData);
+}
+
+
+const sendMessage = async (): Promise<void> => {
+  cryptoModule.setPassword(key.value); // Update the key in CryptoModule
+
+  const encrypted = cryptoModule.encrypt(body.value);
+
+  if (!server.value) {
+    alert('No server name is defined');
+  }
+  const requestBody = {
+    content: encrypted,
+    threadId: threadId.value ? threadId.value : undefined
+  };
+
+  let uri = '/chat';
+  if (api.value) {
+    uri += `?key=${  api.value}`;
+  }
+  responses.value.push({
+    message: body.value,
+    user: 'You'
+  });
+  const request = await fetch(server.value + uri, {
+    mode: 'cors',
+    method: 'POST',
+    body: JSON.stringify(requestBody),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!request.ok) {
+    return alert('Failed to receive server data');
+  }
+  let response = await request.json();
+
+  if (!response) {
+    return alert('Server data is empty or invalid');
+  }
+
+  if (cryptoModule.isEncrypted(response)) {
+    try {
+      response = JSON.parse(cryptoModule.decrypt(response));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  if (!response) {
+    return alert('Server data is invalid');
+  }
+
+  const messages = getAllValuesByPath(response, 'result.content.text.value') as string[];
+  console.log('Received messages: ', messages);
+  if (messages && Array.isArray(messages)) {
+    let type = 'You';
+
+    responses.value = messages.map(message => {
+      const chatMessage:ChatMessage = {
+        message,
+        user: type
+      };
+      type = type === 'Assistant' ? 'You' : 'Assistant';
+      return chatMessage;
+    });
+  }
+  if (response.threadId) {
+    threadId.value = response.threadId;
+    saveSettings();
+  }
+}
+
+const saveSettingsFromUI = (): false | void  => !settings.value && saveSettings()
 </script>
 
 <template>
@@ -162,7 +148,7 @@ export default defineComponent({
 
             <button type="button" class="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
               <label class="inline-flex items-center cursor-pointer">
-                <input v-model="settings" type="checkbox" class="sr-only peer" @click="saveSettings">
+                <input v-model="settings" type="checkbox" class="sr-only peer" @click="saveSettingsFromUI">
                 <div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
                 <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Settings</span>
               </label>

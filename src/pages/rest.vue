@@ -1,56 +1,39 @@
-<script lang="ts">
+<script setup lang="ts">
+const url = ref('');
+const method = ref('GET');
+const headerString = ref('');
+const body = ref('');
+const response = ref('');
 
-import { defineComponent, ref } from 'vue';
+const testApi = async (): Promise<void> => {
+  const headers = new Headers();
 
-export default defineComponent({
-  name: 'RestAPIPage',
-  setup() {
-    const url = ref('');
-    const method = ref('GET');
-    const headerString = ref('');
-    const body = ref('');
-    const response = ref('');
-
-    const testApi = async (): Promise<void> => {
-      const headers = new Headers();
-
-      if (headerString.value) {
-        try {
-          const json = JSON.parse(headerString.value);
-          Object.keys(json).forEach((key) => {
-            headers.set(key, json[key]);
-          });
-        } catch (e) {
-          console.error(e);
-        }
-      }
-      const options: RequestInit = {
-        method: method.value,
-        headers,
-        body: method.value !== 'GET' ? body.value : null,
-      } as RequestInit;
-
-      try {
-        const res = await fetch(url.value, options);
-        const data = await res.json();
-        response.value = JSON.stringify(data, null, 2);
-      } catch (error) {
-        if (error instanceof Error) {
-          response.value = `Error: ${error.message}`;
-        }
-      }
-    };
-
-    return {
-      url,
-      method,
-      headerString,
-      body,
-      response,
-      testApi
-    };
+  if (headerString.value) {
+    try {
+      const json = JSON.parse(headerString.value);
+      Object.keys(json).forEach((key) => {
+        headers.set(key, json[key]);
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
-});
+  const options: RequestInit = {
+    method: method.value,
+    headers,
+    body: method.value !== 'GET' ? body.value : null,
+  } as RequestInit;
+
+  try {
+    const res = await fetch(url.value, options);
+    const data = await res.json();
+    response.value = JSON.stringify(data, null, 2);
+  } catch (error) {
+    if (error instanceof Error) {
+      response.value = `Error: ${error.message}`;
+    }
+  }
+};
 </script>
 
 <template>

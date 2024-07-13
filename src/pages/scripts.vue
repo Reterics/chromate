@@ -1,53 +1,45 @@
-<script lang="ts">
-import { type PropType, defineComponent, ref, toRefs, watch } from 'vue'
+<script setup lang="ts">
+import { type PropType, ref, toRefs, watch } from 'vue'
 
-export default defineComponent({
-  name: 'ListPage',
-  props: {
-    scriptEntries: {
-      type: Array as PropType<InjectedScript[]>,
-      required: true
-    }
-  },
-  emits: ['update'],
-  setup(props, { emit }) {
-    const { scriptEntries } = toRefs(props);
-    const entries = ref(Object.values(scriptEntries.value));
-
-    const updateChromeStorage = (): void => {
-      emit('update', {
-        entries: entries.value
-      });
-    };
-
-    const addEntry = (): void => {
-      const newEntry: InjectedScript = { id: Date.now(), name: '', content: '', keyBind: '' };
-      entries.value.push(newEntry);
-      updateChromeStorage();
-    };
-
-    const updateEntry = (index: number, key: 'name'|'content'|'keyBind', value: string): void => {
-      entries.value[index][key] = value;
-      updateChromeStorage();
-    };
-
-    const deleteEntry = (index: number): void => {
-      entries.value.splice(index, 1);
-      updateChromeStorage();
-    };
-
-    watch(scriptEntries, (newVal) => {
-      entries.value = Object.values(newVal);
-    });
-
-    return {
-      entries,
-      addEntry,
-      updateEntry,
-      deleteEntry
-    };
+const props = defineProps({
+  scriptEntries: {
+    type: Array as PropType<InjectedScript[]>,
+    required: true
   }
+})
+
+const emit = defineEmits(['update'])
+
+
+const { scriptEntries } = toRefs(props);
+const entries = ref(Object.values(scriptEntries.value));
+
+const updateChromeStorage = (): void => {
+  emit('update', {
+    entries: entries.value
+  });
+};
+
+const addEntry = (): void => {
+  const newEntry: InjectedScript = { id: Date.now(), name: '', content: '', keyBind: '' };
+  entries.value.push(newEntry);
+  updateChromeStorage();
+};
+
+const updateEntry = (index: number, key: 'name'|'content'|'keyBind', value: string): void => {
+  entries.value[index][key] = value;
+  updateChromeStorage();
+};
+
+const deleteEntry = (index: number): void => {
+  entries.value.splice(index, 1);
+  updateChromeStorage();
+};
+
+watch(scriptEntries, (newVal) => {
+  entries.value = Object.values(newVal);
 });
+
 </script>
 
 <template>
