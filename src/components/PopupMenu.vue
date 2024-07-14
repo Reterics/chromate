@@ -1,4 +1,30 @@
 <script setup lang="ts">
+import {useRoute} from 'vue-router';
+
+const route = useRoute();
+
+const menu = [
+  {
+    path: 'popup',
+    name: 'Home',
+  },
+  {
+    path: 'chat',
+    name: 'Chat',
+  },
+  {
+    path: 'scripts',
+    name: 'Scripts',
+  },
+  {
+    path: 'rest',
+    name: 'Rest API',
+  },
+  {
+    path: 'about',
+    name: 'About',
+  }
+]
 </script>
 
 <template>
@@ -8,31 +34,14 @@
         <img src="../assets/logo_white.png" class="h-8" alt="Chromate Logo">
         <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Chromate</span>
       </a>
-      <div class="w-full sm:block sm:w-auto">
-        <ul class="font-medium flex flex-col p-4 sm:p-0 mt-4 border border-gray-100 rounded-lg sm:flex-row sm:space-x-8 rtl:space-x-reverse sm:mt-0 sm:border-0 bg-gray-900 dark:border-gray-700">
-          <li>
-            <RouterLink class="block py-2 px-3 bg-blue-700 rounded sm:bg-transparent sm:p-0 text-white" to="popup">
-              Home
+      <div class="block w-auto">
+        <ul v-if="route.name" class="font-medium flex p-0 rounded-lg flex-row space-x-4 rtl:space-x-reverse mt-0 bg-gray-900">
+          <li v-for="(entry) in menu" :key="entry.name">
+            <RouterLink v-if="route.name === entry.path" class="block py-2 px-3 rounded text-white bg-gray-700" :to="entry.path">
+              {{ entry.name }}
             </RouterLink>
-          </li>
-          <li>
-            <RouterLink class="block py-2 px-3 rounded hover:bg-gray-100 sm:hover:bg-transparent sm:border-0 sm:hover:text-blue-700 sm:p-0 text-white sm:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white sm:dark:hover:bg-transparent" to="chat">
-              Chat
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink class="block py-2 px-3 rounded hover:bg-gray-100 sm:hover:bg-transparent sm:border-0 sm:hover:text-blue-700 sm:p-0 text-white sm:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white sm:dark:hover:bg-transparent" to="scripts">
-              Scripts
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink class="block py-2 px-3 rounded hover:bg-gray-100 sm:hover:bg-transparent sm:border-0 sm:hover:text-blue-700 sm:p-0 text-white sm:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white sm:dark:hover:bg-transparent" to="rest">
-              Rest API
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink class="block py-2 px-3 rounded hover:bg-gray-100 sm:hover:bg-transparent sm:border-0 sm:hover:text-blue-700 sm:p-0 text-white sm:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white sm:dark:hover:bg-transparent" to="/about">
-              About
+            <RouterLink v-else class="block py-2 px-3 rounded text-white hover:bg-gray-700" :to="entry.path">
+              {{ entry.name }}
             </RouterLink>
           </li>
         </ul>
