@@ -69,3 +69,8 @@ interface ChromeStoredData {
     counter?: number,
     chat?: ChatData
 }
+
+interface TextFile {
+    value: string|ArrayBuffer|null,
+    file_input?: File
+}

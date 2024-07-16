@@ -67,6 +67,11 @@ export class ScriptInterpreter {
                         console.error(e);
                     });
                     break;
+                case 'console':
+                    result = await this.executeOn(console, keys).catch(e=> {
+                        console.error(e);
+                    });
+                    break;
                 default:
                     console.warn(`${sourceCommand} is not supported command`);
             }
