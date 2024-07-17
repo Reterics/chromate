@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type PropType, ref, toRefs, watch } from 'vue'
+import { downloadJSON, readTextFile } from '../utils/chatUtils.ts'
 
 const props = defineProps({
   scriptEntries: {
@@ -48,6 +49,40 @@ watch(scriptEntries, (newVal) => {
   entries.value = Object.values(newVal);
 });
 
+const clearEntries = () => {
+  entries.value = [];
+
+};
+const saveEntries = () => {
+  downloadJSON(entries.value, ('entries' + new Date().getTime()) + '.json');
+};
+const loadEntries = () => {
+  readTextFile().then((file: TextFile)=>{
+    if (file && typeof file.value === "string") {
+      let data;
+      try {
+        data = JSON.parse(file.value);
+      } catch (e) {
+        console.error(e);
+      }
+
+      if (Array.isArray(data) && data.length > 0) {
+        entries.value = data.map((d, index) => {
+          if (typeof d.keyBind === 'string' &&
+            typeof d.content === 'string' && d.content && d.keyBind) {
+            return {
+              keyBind: d.keyBind,
+              content: d.content,
+              name: d.name && typeof d.name === 'string' ? d.name : index.toString(),
+              id: typeof d.id === "number" ? d.id : index + 1
+            } as InjectedScript
+          }
+          return null;
+        }).filter(d => d) as InjectedScript[];
+      }
+    }
+  })
+};
 </script>
 
 <template>
@@ -84,19 +119,43 @@ watch(scriptEntries, (newVal) => {
             <input id="first_name" v-model="entry.keyBind" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Keybind" required @input="updateEntry(index, 'keyBind', entry.keyBind)">
           </td>
           <td class="p-1 justify-center justify-items-center text-center">
-            <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" @click="deleteEntry(index)">Delete</a>
+
+            <a class="flex w-auto place-content-center font-medium text-red-600 dark:text-red-500 hover:underline" @click="deleteEntry(index)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+              </svg>
+            </a>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <div class="bg-white dark:bg-gray-900 w-100 p-1">
-      <button
-        type="button" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-        @click="addEntry"
-      >
-        Add Entry
-      </button>
+    <div class="bg-white dark:bg-gray-900 w-100 p-1 flex items-center justify-between flex-row-reverse">
+      <div class="inline-flex rounded-md shadow-sm" role="group">
+        <button type="button" class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-gray-800 rounded-l hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="addEntry">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+          </svg>
+        </button>
+        <button type="button" class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-gray-800 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="clearEntries">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
+            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+          </svg>
+        </button>
+        <button type="button" class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-gray-800 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="saveEntries">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+            <path d="M11 2H9v3h2z"/>
+            <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+          </svg>
+        </button>
+        <button type="button" class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-gray-800 rounded-r hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="loadEntries">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16">
+            <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139q.323-.119.684-.12h5.396z"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 </template>
