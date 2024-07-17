@@ -14,10 +14,18 @@ const emit = defineEmits(['update'])
 const { scriptEntries } = toRefs(props);
 const entries = ref(Object.values(scriptEntries.value));
 
+let debounceTimer: NodeJS.Timeout | null = null;
+
 const updateChromeStorage = (): void => {
-  emit('update', {
-    entries: entries.value
-  });
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+  }
+  debounceTimer = setTimeout(()=>{
+    emit('update', {
+      entries: entries.value
+    });
+  }, 1000);
+
 };
 
 const addEntry = (): void => {

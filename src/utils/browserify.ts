@@ -1,7 +1,7 @@
 import {Buffer} from "buffer"
 
 
-export function applyBrowserUtils(): void {
+export const applyBrowserUtils = (function(): () => void {
     // Define global process object if it doesn't exist
     if (typeof process === 'undefined') {
         window.process = {
@@ -14,4 +14,9 @@ export function applyBrowserUtils(): void {
     if (typeof window.Buffer === 'undefined') {
         window.Buffer = Buffer;
     }
-}
+    return ()=> {
+        if(!window.process || !window.process.browser) {
+            throw new Error('Failed to apply browser utils');
+        }
+    };
+})();

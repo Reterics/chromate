@@ -1,7 +1,11 @@
+import {applyBrowserUtils} from "../utils/browserify.ts";
+import '@/assets/style.scss'
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router/auto'
 import App from './app.vue'
 import routes from '~pages'
+
+applyBrowserUtils();
 
 export interface ISetup {
     setupType: 'install' | 'update'

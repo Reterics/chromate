@@ -26,6 +26,7 @@ export class ScriptInterpreter {
                     // @ts-expect-error We already checked if it is a function
                     target = await target[method](...parameters
                         .split(',')
+                        .map(p => p.trim())
                         .map(p => p.startsWith('\'') || p.startsWith('"') ? p.substring(1, p.length - 1) : p));
                 } else {
                     console.warn(`${method} is not a function.`);
