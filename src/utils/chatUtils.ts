@@ -61,6 +61,7 @@ export const uploadFileInputAsText = (file: Blob): Promise<string|ArrayBuffer|nu
 export const readTextFile = (accept = 'application/json'): Promise<TextFile> => {
     return new Promise(resolve => {
         const fileInput = document.createElement("input");
+        fileInput.classList.add("readTextFile");
         fileInput.setAttribute("type", "file");
         if (accept) {
             fileInput.setAttribute('accept', accept);

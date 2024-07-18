@@ -5,26 +5,27 @@ const route = useRoute();
 
 const menu = [
   {
-    path: 'popup',
+    path: '/popup',
     name: 'Home',
   },
   {
-    path: 'chat',
+    path: '/chat',
     name: 'Chat',
   },
   {
-    path: 'scripts',
+    path: '/scripts',
     name: 'Scripts',
   },
   {
-    path: 'rest',
+    path: '/rest',
     name: 'Rest API',
   },
   {
-    path: 'about',
+    path: '/about',
     name: 'About',
   }
-]
+];
+const routeName = String(route.name || 'popup') ;
 </script>
 
 <template>
@@ -37,7 +38,7 @@ const menu = [
       <div class="block w-auto">
         <ul v-if="route.name" class="font-medium flex p-0 rounded-lg flex-row space-x-4 rtl:space-x-reverse mt-0 bg-gray-900">
           <li v-for="(entry) in menu" :key="entry.name">
-            <RouterLink v-if="route.name === entry.path" class="block py-2 px-3 rounded text-white bg-gray-700" :to="entry.path">
+            <RouterLink v-if="`/${routeName}` === entry.path" class="block py-2 px-3 rounded text-white bg-gray-700" :to="entry.path">
               {{ entry.name }}
             </RouterLink>
             <RouterLink v-else class="block py-2 px-3 rounded text-white hover:bg-gray-700" :to="entry.path">

@@ -121,6 +121,9 @@ const loadScript = () => {
     height: 100%;
     width: 100%;
   }
+  #editor {
+    max-width: 690px;
+  }
   #editor .cm-editor, #editor .cm-scroller, #editor {
     font-size: 1.2em;
     line-height: 1.4em;

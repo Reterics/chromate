@@ -24,7 +24,8 @@ If you want to execute your own scripts in order to help testing your applicatio
 ![Scripts](./docs/scripts.png)
 
 
-Script menu has a build-in Javascript Editor to improve user experience.
+Script menu has a built-in Javascript Editor to improve user experience.
+
 ![JSEditor](./docs/editor.png)
 
 ### Rest API
@@ -35,7 +36,7 @@ quickly execute our requests.
 
 ## Contribute
 
-There are many ways to [contribute](./CONTRIBUTING.md) to Quick Chat API Client.
+There are many ways to [contribute](./CONTRIBUTING.md) to Chromate Extension.
 * [Submit bugs](https://github.com/entroped/quick-chat-api-client/issues) and help us verify fixes as they are checked in.
 * Review the [source code changes](https://github.com/entroped/quick-chat-api-client/pulls).
 * [Contribute bug fixes](https://github.com/entroped/quick-chat-api-client/blob/main/CONTRIBUTING.md).
