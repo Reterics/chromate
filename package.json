@@ -3,7 +3,7 @@
   "displayName": "Chromate Vue Chrome Extension",
   "description": "Chromate is a helper Chrome extension",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "repository": {
     "url": "https://github.com/Reterics/chromate",
@@ -17,7 +17,9 @@
   },
   "dependencies": {
     "@antfu/eslint-config": "^2.22.2",
+    "@codemirror/lang-javascript": "^6.2.2",
     "@vue/eslint-config-prettier": "^9.0.0",
+    "codemirror": "^6.0.1",
     "crypto-browserify": "^3.12.0",
     "eslint-config-prettier": "^9.1.0",
     "marked": "^13.0.2",

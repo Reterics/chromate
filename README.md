@@ -23,6 +23,10 @@ your own OpenAI GPT assistant in a secure channel _(AES-256-cbc encryption)_.
 If you want to execute your own scripts in order to help testing your application you can create events for them.
 ![Scripts](./docs/scripts.png)
 
+
+Script menu has a build-in Javascript Editor to improve user experience.
+![JSEditor](./docs/editor.png)
+
 ### Rest API
 For testing simple Rest API endpoint without any need for further customizations, we can use the Rest API page to
 quickly execute our requests.

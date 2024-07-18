@@ -45,7 +45,8 @@ export default antfu(
       'node/prefer-global/buffer': 'off',
       'unicorn/prefer-node-protocol': 'off',
       'one-var': 'off',
-      '@typescript-eslint/no-unused-vars': 'off'
+      '@typescript-eslint/no-unused-vars': 'off',
+      'unicorn/prefer-dom-node-text-content': 'off'
     },
   }
 )

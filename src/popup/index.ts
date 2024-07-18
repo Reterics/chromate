@@ -12,6 +12,11 @@ routes.push({
     redirect: '/popup',
 })
 
+const editorRoute = routes.find((route) => route.path === '/editor');
+if (editorRoute) {
+    editorRoute.path+= '/:id';
+}
+
 const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
     routes,

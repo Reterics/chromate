@@ -26,9 +26,8 @@ export const getAllValuesByPath = (obj: NestedObject, path: string): any => {
     return results;
 };
 
-export const downloadJSON = (jsonObject: object, filename: string) => {
-    const jsonString = JSON.stringify(jsonObject);
-    const blob = new Blob([jsonString], { type: "application/json" });
+export const downloadFile = (content: string, filename: string, type = "application/json") => {
+    const blob = new Blob([content], { type });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
 
@@ -41,6 +40,10 @@ export const downloadJSON = (jsonObject: object, filename: string) => {
     URL.revokeObjectURL(url);
 }
 
+
+export const downloadJSON = (jsonObject: object, filename: string) => {
+    downloadFile(JSON.stringify(jsonObject), filename, "application/json");
+}
 
 export const uploadFileInputAsText = (file: Blob): Promise<string|ArrayBuffer|null> => {
     return new Promise(resolve => {

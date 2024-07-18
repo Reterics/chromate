@@ -46,7 +46,7 @@ export default defineConfig({
         {
           dir: 'src/options/pages',
           baseRoute: 'options',
-        },
+        }
       ],
     }),
 
