@@ -37,7 +37,7 @@ quickly execute our requests.
 ## Contribute
 
 There are many ways to [contribute](./CONTRIBUTING.md) to Chromate Extension.
-* [Submit bugs](https://github.com/entroped/quick-chat-api-client/issues) and help us verify fixes as they are checked in.
-* Review the [source code changes](https://github.com/entroped/quick-chat-api-client/pulls).
-* [Contribute bug fixes](https://github.com/entroped/quick-chat-api-client/blob/main/CONTRIBUTING.md).
+* [Submit bugs](https://github.com/Reterics/chromate/issues) and help us verify fixes as they are checked in.
+* Review the [source code changes](https://github.com/Reterics/chromate/pulls).
+* [Contribute bug fixes](https://github.com/Reterics/chromate/blob/main/CONTRIBUTING.md).
 
