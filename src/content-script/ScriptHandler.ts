@@ -25,7 +25,7 @@ export class ScriptHandler {
         })
     }
 
-    loadScript({name, keyBind, content}: InjectedScript): void {
+    loadScript({name, keyBind, content, origin}: InjectedScript): void {
         if (Object
             .values(this._loaded)
             .filter(entry => entry.find(l => l.name === name))
@@ -38,10 +38,13 @@ export class ScriptHandler {
             this._loaded[keyBind] = [];
         }
 
-        this._loaded[keyBind].push({
-            name,
-            content,
-            keyBind
-        });
+        // Origin can be /http(s)?:\/\/.+\.com/g
+        if (!origin || location.origin.match(new RegExp(origin))) {
+            this._loaded[keyBind].push({
+                name,
+                content,
+                keyBind
+            });
+        }
     }
 }

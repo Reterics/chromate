@@ -30,12 +30,18 @@ const updateChromeStorage = (): void => {
 };
 
 const addEntry = (): void => {
-  const newEntry: InjectedScript = { id: Date.now(), name: '', content: '', keyBind: '' };
+  const newEntry: InjectedScript = {
+    id: Date.now(),
+    name: '',
+    content: '',
+    keyBind: '',
+    origin: 'http(s)?:\\/\\/.+\\.com'
+  };
   entries.value.push(newEntry);
   updateChromeStorage();
 };
 
-const updateEntry = (index: number, key: 'name'|'content'|'keyBind', value: string): void => {
+const updateEntry = (index: number, key: 'name'|'content'|'keyBind'|'origin', value: string): void => {
   entries.value[index][key] = value;
   updateChromeStorage();
 };
@@ -49,14 +55,14 @@ watch(scriptEntries, (newVal) => {
   entries.value = Object.values(newVal);
 });
 
-const clearEntries = () => {
+const clearEntries = (): void => {
   entries.value = [];
 
 };
-const saveEntries = () => {
-  downloadJSON(entries.value, ('entries' + new Date().getTime()) + '.json');
+const saveEntries = (): void => {
+  downloadJSON(entries.value, `entries${new Date().getTime()}.json`);
 };
-const loadEntries = () => {
+const loadEntries = (): void => {
   readTextFile().then((file: TextFile)=>{
     if (file && typeof file.value === "string") {
       let data;
@@ -73,6 +79,7 @@ const loadEntries = () => {
             return {
               keyBind: d.keyBind,
               content: d.content,
+              origin: d.origin,
               name: d.name && typeof d.name === 'string' ? d.name : index.toString(),
               id: typeof d.id === "number" ? d.id : index + 1
             } as InjectedScript
@@ -94,7 +101,7 @@ const loadEntries = () => {
             Name
           </th>
           <th scope="col" class="px-6 py-3">
-            Content
+            Origin
           </th>
           <th scope="col" class="px-6 py-3">
             Keybind
@@ -107,13 +114,18 @@ const loadEntries = () => {
       <tbody v-if="entries.length > 0">
         <tr v-for="(entry, index) in entries" :key="entry.id" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
           <th scope="row" class="p-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            <input id="first_name" v-model="entry.name" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Name" required @input="updateEntry(index, 'name', entry.name)">
+            <input
+              id="name" v-model="entry.name" type="text"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Name" required @input="updateEntry(index, 'name', entry.name)"
+            >
           </th>
           <td class="p-1">
-            <textarea
-              id="first_name" v-model="entry.content" type="text"
-              class="block p-2.5 h-[40px] w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Script" required @input="updateEntry(index, 'content', entry.content)"
-            />
+            <input
+              id="origin" v-model="entry.origin" type="text"
+              class="block p-2.5 h-[40px] w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Origin" required @input="updateEntry(index, 'origin', entry.origin || '')"
+            >
           </td>
           <td class="p-1">
             <input id="first_name" v-model="entry.keyBind" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Keybind" required @input="updateEntry(index, 'keyBind', entry.keyBind)">

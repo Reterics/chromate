@@ -54,7 +54,8 @@ interface InjectedScript {
     id?: number,
     name: string,
     keyBind: string,
-    content: string
+    content: string,
+    origin?: string
 }
 
 interface ChatData {
